@@ -1,5 +1,6 @@
 var Users = [];
 var Messages = [];
+var _ = R;
 
 var UsersList = React.createClass({
   render: function(){
@@ -74,20 +75,31 @@ var MessageForm = React.createClass({
 
 var ChatApp = React.createClass({
 
+  getDefaultProps: function() {
+    return {
+      "history_count": 10
+    };
+  },
+
   getInitialState: function(){
     var routes = {
-        'message': this.messageRecieve.bind(this),
+        'message': this.messageReceive.bind(this),
         'join': this.userJoined.bind(this),
         'left': this.userLeft.bind(this)
-      }
-
-    var route = function(e) {
-      var evnt = JSON.parse(e);
-      console.log("evnt", evnt);
-      routes[evnt.event](evnt.data);
-    }
+      },
+      route = function(e) {
+        var evnt = JSON.parse(e);
+        routes[evnt.event](evnt.data);
+      };
 
     this.props.pubnub.subscribe({channel: this.props.channel, message: route})
+ 
+    this.props.pubnub.history({
+      channel: this.props.channel,
+      count: this.props.history_count,
+      callback: this.messagesReceive.bind(this)
+    });
+
     return {users: [], messages:[], text: ''};
   },
 
@@ -103,8 +115,13 @@ var ChatApp = React.createClass({
     this.setState({ users: Users, user: data.name});
   },
 
-  messageRecieve: function(message){
+  messageReceive: function(message){
     Messages.push(message);
+    this.setState({ messages : Messages });
+  },
+
+  messagesReceive: function(messages){
+    Messages = _.pluck('data', messages[0]);
     this.setState({ messages : Messages });
   },
 

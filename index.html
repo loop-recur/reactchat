@@ -3,6 +3,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/react/0.12.2/react.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/react/0.12.2/JSXTransformer.js"></script>
     <script src="//cdn.pubnub.com/pubnub-3.7.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/ramda/0.8.0/ramda.js"></script>
 
     <script type="text/jsx" src="chat.js"></script>
 
@@ -11,7 +12,13 @@
         publish_key: 'pub-c-25e1956e-b203-4ad3-8b00-48ba03db5f11',
         subscribe_key: 'sub-c-13474ece-92bf-11e4-8ffd-02ee2ddab7fe'
       });
-      React.renderComponent(<ChatApp pubnub={pubnub} channel={'haskell'}/>, document.body);
+      React.renderComponent(
+        <ChatApp
+          pubnub={pubnub}
+          channel={'haskell'}
+          history_count={10} />,
+        document.body
+      );
     </script>
 
   </head>
