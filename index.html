@@ -1,0 +1,29 @@
+<html>
+  <head>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/react/0.12.2/react.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/react/0.12.2/JSXTransformer.js"></script>
+    <script src="//cdn.pubnub.com/pubnub-3.7.1.min.js"></script>
+
+    <script type="text/jsx" src="chat.js"></script>
+
+    <script type="text/jsx">
+      var pubnub = PUBNUB.init({
+        publish_key: 'pub-c-25e1956e-b203-4ad3-8b00-48ba03db5f11',
+        subscribe_key: 'sub-c-13474ece-92bf-11e4-8ffd-02ee2ddab7fe'
+      });
+
+      pubnub.subscribe({
+        channel: 'my_channel',
+        message: function(m){console.log(m)}
+      });
+
+      c = React.renderComponent(<ChatApp/>, document.body);
+    </script>
+
+  </head>
+
+  <body>
+
+
+  </body>
+</html>
