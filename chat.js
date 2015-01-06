@@ -72,65 +72,30 @@ var MessageForm = React.createClass({
   }
 });
 
-var ChangeNameForm = React.createClass({
-  getInitialState: function(){
-    return {newName: ''};
-  },
-
-  onKey : function(e){
-    this.setState({ newName : e.target.value });
-  },
-
-  handleSubmit : function(e){
-    e.preventDefault();
-    var newName = this.state.newName;
-    this.props.onChangeName(newName);    
-    this.setState({ newName: '' });
-  },
-
-  render: function(){
-    return(
-      <div class='change_name_form'>
-      <h3> Change Name </h3>
-      <form onSubmit={this.handleSubmit}>
-      <input onChange={this.onKey} value={this.state.newName} />
-      </form>  
-      </div>
-    );
-  }
-});
-
-
 var ChatApp = React.createClass({
 
   getInitialState: function(){
+    var routes = {
+        'message': this.messageRecieve.bind(this),
+        'join': this.userJoined.bind(this),
+        'left': this.userLeft.bind(this)
+      }
 
-    pubnub.subscribe({
-      channel: 'chat4:init',
-      message: this.initialize
-    });
+    var route = function(e) {
+      var evnt = JSON.parse(e);
+      console.log("evnt", evnt);
+      routes[evnt.event](evnt.data);
+    }
 
-    pubnub.subscribe({
-      channel: 'chat4:send:message',
-      message: this.messageRecieve
-    });
-
-    pubnub.subscribe({
-      channel: 'chat4:send:join',
-      message: this.userJoined
-    });
-
-    pubnub.subscribe({
-      channel: 'chat4:send:left',
-      message: this.userLeft
-    });
-
-    pubnub.subscribe({
-      channel: 'chat4:change:name',
-      message: this.userChangedName
-    });
-
+    this.props.pubnub.subscribe({channel: this.props.channel, message: route})
     return {users: [], messages:[], text: ''};
+  },
+
+  emit: function (event, data) {
+    this.props.pubnub.publish({
+      channel: this.props.channel,
+      message: JSON.stringify({event: event, data: data})
+    });
   },
 
   initialize: function(data){
@@ -162,45 +127,8 @@ var ChatApp = React.createClass({
     this.setState({ users : Users, messages: Messages});
   },
 
-  userChangedName : function(data){
-    var oldName = data.oldName;
-    var newName = data.newName;
-    Users.splice(Users.indexOf(oldName), 1, newName);
-    Messages.push({
-      user: 'APLICATION BOT',
-      text : 'Change Name : ' + oldName + ' ==> '+ newName
-    });
-    this.setState({ users : Users, messages: Messages});
-  },
-
   handleMessageSubmit : function(message){
-    Messages.push(message);
-    this.setState({ messages : Messages });
-    pubnub.publish({
-      channel: 'chat4:send:message',
-      message: JSON.stringify(message)
-    });
-  },
-
-  handleChangeName : function(newName){
-    var that = this;
-    var oldName = this.state.user;
-    pubnub.publish({
-      channel: 'chat4:change:name',
-      message: JSON.stringify({name : newName})
-    });
-    var index = Users.indexOf(oldName);
-    Users.splice(index, 1, newName);
-    that.setState({users : Users});
-    // socket.emit('change:name', { name : newName}, function(result){
-    //   if(!result){
-    //     alert('There was an error changing your name');
-    //   }else{
-    //     var index = Users.indexOf(oldName);
-    //     Users.splice(index, 1, newName);
-    //     that.setState({users : Users});
-    //   }
-    // });
+    this.emit("message", message);
   },
 
   render : function(){
@@ -209,37 +137,7 @@ var ChatApp = React.createClass({
       <UsersList users={this.state.users} />
       <MessageList messages={this.state.messages} />
       <MessageForm onMessageSubmit={this.handleMessageSubmit} user={this.state.user} />
-      <ChangeNameForm onChangeName={this.handleChangeName} />
       </div>
     );
   }
 });
-
-
-// var Message;
-// window.Chat = {
-//   Message: Message = React.createClass({
-//     render: function(){
-//       return(
-//         <div class="message">
-//         <strong>{this.props.user}</strong> :
-//           {this.props.text}
-//         </div>
-//       )
-//     }
-//   }),
-
-//   MessageList: React.createClass({
-//     render: function(){
-//       var renderMessage = function(message){
-//         return <Message user={message.user} text={message.text} />
-//       }
-//       return (
-//         <div class='messages'>
-//         <h2> Conversation: </h2>
-//         { this.props.messages.map(renderMessage) }
-//         </div>
-//       );
-//     }
-//   })
-// };

@@ -11,13 +11,7 @@
         publish_key: 'pub-c-25e1956e-b203-4ad3-8b00-48ba03db5f11',
         subscribe_key: 'sub-c-13474ece-92bf-11e4-8ffd-02ee2ddab7fe'
       });
-
-      pubnub.subscribe({
-        channel: 'my_channel',
-        message: function(m){console.log(m)}
-      });
-
-      c = React.renderComponent(<ChatApp/>, document.body);
+      React.renderComponent(<ChatApp pubnub={pubnub} channel={'haskell'}/>, document.body);
     </script>
 
   </head>
