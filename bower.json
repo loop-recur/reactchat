@@ -1,0 +1,24 @@
+{
+  "name": "react-chat",
+  "version": "0.0.0",
+  "homepage": "https://github.com/loop-recur/reactchat",
+  "authors": [
+    "Joe Nelson <cred+github@begriffs.com>"
+  ],
+  "description": "demo",
+  "main": "index.html",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.1",
+    "ramda": "~0.8.0",
+    "react": "~0.12.2"
+  }
+}

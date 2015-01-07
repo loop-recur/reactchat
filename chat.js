@@ -10,7 +10,7 @@ var UsersList = React.createClass({
     return (
       <div class='users'>
       <h3> Online Users </h3>
-      <ul>{ this.props.users.map(renderUser)} </ul>               
+      <ul>{ this.props.users.map(renderUser)} </ul>
       </div>
     );
   }
@@ -47,18 +47,18 @@ var MessageForm = React.createClass({
     return {text: ''};
   },
 
-  handleSubmit : function(e){
+  handleSubmit: function(e){
     e.preventDefault();
     var message = {
-      user : this.props.user,
-      text : this.state.text
+      text: this.state.text
     }
+    console.log(message);
     this.props.onMessageSubmit(message); 
     this.setState({ text: '' });
   },
 
-  changeHandler : function(e){
-    this.setState({ text : e.target.value });
+  changeHandler: function(e){
+    this.setState({ text: e.target.value });
   },
 
   render: function(){
@@ -77,7 +77,8 @@ var ChatApp = React.createClass({
 
   getDefaultProps: function() {
     return {
-      "history_count": 10
+      "history_count": 10,
+      "user": "anonymous"
     };
   },
 
@@ -106,7 +107,7 @@ var ChatApp = React.createClass({
   emit: function (event, data) {
     this.props.pubnub.publish({
       channel: this.props.channel,
-      message: JSON.stringify({event: event, data: data})
+      message: JSON.stringify({user: this.props.user, event: event, data: data})
     });
   },
 
@@ -117,21 +118,21 @@ var ChatApp = React.createClass({
 
   messageReceive: function(message){
     Messages.push(message);
-    this.setState({ messages : Messages });
+    this.setState({ messages: Messages });
   },
 
   messagesReceive: function(messages){
     Messages = _.pluck('data', messages[0]);
-    this.setState({ messages : Messages });
+    this.setState({ messages: Messages });
   },
 
   userJoined: function(data){
     Users.push(data.name);
     Messages.push({
-      user: 'APLICATION BOT',
-      text : data.name +' Joined'
+      user: this.props.user,
+      text: data.name +' Joined'
     });
-    this.setState({ users : Users, messages: Messages});
+    this.setState({ users: Users, messages: Messages});
   },
 
   userLeft: function(data){
@@ -139,16 +140,16 @@ var ChatApp = React.createClass({
     Users.splice(index, 1);
     Messages.push({
       user: 'APLICATION BOT',
-      text : data.name +' Left'
+      text: data.name +' Left'
     });
-    this.setState({ users : Users, messages: Messages});
+    this.setState({ users: Users, messages: Messages});
   },
 
-  handleMessageSubmit : function(message){
+  handleMessageSubmit: function(message){
     this.emit("message", message);
   },
 
-  render : function(){
+  render: function(){
     return (
       <div>
       <UsersList users={this.state.users} />

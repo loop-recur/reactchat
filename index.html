@@ -1,9 +1,11 @@
 <html>
   <head>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/react/0.12.2/react.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/react/0.12.2/JSXTransformer.js"></script>
-    <script src="//cdn.pubnub.com/pubnub-3.7.1.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/ramda/0.8.0/ramda.js"></script>
+    <link  href="bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+
+    <script src="bower_components/react/react.js"></script>
+    <script src="bower_components/react/JSXTransformer.js"></script>
+    <script src="bower_components/pubnub/web/pubnub.js"></script>
+    <script src="bower_components/ramda/ramda.js"></script>
 
     <script type="text/jsx" src="chat.js"></script>
 
@@ -15,6 +17,7 @@
       React.renderComponent(
         <ChatApp
           pubnub={pubnub}
+          user={"user" + Math.floor(Math.random() * 100)}
           channel={'haskell'}
           history_count={10} />,
         document.body
