@@ -6,28 +6,97 @@
     <script src="bower_components/react/JSXTransformer.js"></script>
     <script src="bower_components/pubnub/web/pubnub.js"></script>
     <script src="bower_components/ramda/ramda.js"></script>
+    <script src="bower_components/moment/moment.js"></script>
 
     <script type="text/jsx" src="chat.js"></script>
 
     <script type="text/jsx">
-      var pubnub = PUBNUB.init({
-        publish_key: 'pub-c-25e1956e-b203-4ad3-8b00-48ba03db5f11',
-        subscribe_key: 'sub-c-13474ece-92bf-11e4-8ffd-02ee2ddab7fe'
+      // var pubnub = PUBNUB.init({
+      //   publish_key: 'pub-c-25e1956e-b203-4ad3-8b00-48ba03db5f11',
+      //   subscribe_key: 'sub-c-13474ece-92bf-11e4-8ffd-02ee2ddab7fe'
+      // });
+
+      var Icon = React.createClass({
+        render: function () {
+          return (
+            <img class="icon {this.props.type}" src={this.props.src} />
+          );
+        }
       });
-      React.renderComponent(
-        <ChatApp
-          pubnub={pubnub}
-          user={"user" + Math.floor(Math.random() * 100)}
-          channel={'haskell'}
-          history_count={10} />,
-        document.body
-      );
+
+      var Decoration = React.createClass({
+        render: function () {
+          return (
+            <ul class="decoration">
+              <li><Icon type="user" src="http://bit.ly/1HOCCui" /></li>
+              <li><Icon type="user" src="http://bit.ly/1AsUibq" /></li>
+            </ul>
+          );
+        }
+      });
+
+      var Summary = React.createClass({
+        render: function () {
+          return (
+            <div class="summary">added 2 users to this board</div>
+          );
+        }
+      });
+
+      var Provenance = React.createClass({
+        render: function () {
+          var who = this.props.who, when = moment(this.props.when).fromNow();
+
+          return (
+            <div class="provenance">
+              <span class="who">{who}</span> &bull;&nbsp;
+              <span class="when">{when}</span>
+            </div>
+          );
+        }
+      });
+
+      var Point = React.createClass({
+        render: function () {
+          return (
+            <div class="point">
+              <Provenance who="you" when="1990-01-01 10:22 PM" />
+              <Summary />
+              <Decoration />
+            </div>
+          );
+        }
+      });
+
+      var ChatInput = React.createClass({
+        render: function () {
+          return (
+            <div class="chat">
+              <Icon type="user" src="http://bit.ly/1HOCCui" />
+              <input type="text" placeholder="add a comment..."></input>
+            </div>
+          );
+        }
+      });
+
+      var Timeline = React.createClass({
+        render: function () {
+          return (
+            <div class="timline">
+              <Point />
+              <Point />
+              <ChatInput />
+            </div>
+          );
+        }
+      });
+
+      React.renderComponent(<Timeline />, document.getElementById('container'));
     </script>
 
   </head>
 
   <body>
-
-
+    <div id="container"></div>
   </body>
 </html>
