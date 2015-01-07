@@ -12,11 +12,6 @@
     <script type="text/jsx" src="chat.js"></script>
 
     <script type="text/jsx">
-      // var pubnub = PUBNUB.init({
-      //   publish_key: 'pub-c-25e1956e-b203-4ad3-8b00-48ba03db5f11',
-      //   subscribe_key: 'sub-c-13474ece-92bf-11e4-8ffd-02ee2ddab7fe'
-      // });
-
       // Timeline
       //   Point
       //     Provenance
@@ -163,7 +158,25 @@
         },
       ];
 
-      React.render(<Timeline points={events} />, document.getElementById('container'));
+      var pubnub = PUBNUB.init({
+        publish_key: 'pub-c-25e1956e-b203-4ad3-8b00-48ba03db5f11',
+        subscribe_key: 'sub-c-13474ece-92bf-11e4-8ffd-02ee2ddab7fe'
+      });
+
+      pubnub.subscribe({
+        channel: "board:"+1,
+        message: function(m) {
+                   events.push(m);
+                   render(events);
+                 }
+      });
+
+      function render (events) {
+        console.log(events.length);
+        React.render(<Timeline points={events} />, document.getElementById('container'));
+      }
+
+      render(events);
     </script>
 
   </head>
