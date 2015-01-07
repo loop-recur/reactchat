@@ -17,6 +17,15 @@
       //   subscribe_key: 'sub-c-13474ece-92bf-11e4-8ffd-02ee2ddab7fe'
       // });
 
+      // Timeline
+      //   Point
+      //     Provenance
+      //     Summary
+      //     Decoration
+      //       Icon
+      //   ChatInput
+
+
       var Icon = React.createClass({
         render: function () {
           var src = this.props.src;
@@ -29,10 +38,14 @@
       var Decoration = React.createClass({
         render: function () {
           var type = (this.props.what === "add-user" ? "user" : "insight"),
-            src = this.props.image;
+            src = this.props.image, boardName = this.props.details.title,
+            what = this.props.what;
+
+          var inside = (what === "renamed-board") ? boardName : <Icon type={type} src={src} />;
+
           return (
             <ul className="decoration list-inline">
-              <li><Icon type={type} src={src} /></li>
+              <li>{inside}</li>
             </ul>
           );
         }
@@ -72,14 +85,14 @@
             when = moment(this.props.point.when).fromNow(),
             what = this.props.point.what,
             details = this.props.point.details,
-            image = details.thumbnail;
+            image = details.thumbnail || who.thumbnail;
           return (
             <div className="point row">
               <div className="col-sm-6">
                 <Provenance who={who} when={when} />
                 <Summary what={what} details={details} />
               </div>
-              <Decoration what={what} image={image} className="col-sm-6" />
+              <Decoration what={what} image={image} details={details} className="col-sm-6" />
             </div>
           );
         }
