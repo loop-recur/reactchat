@@ -1,6 +1,7 @@
 <html>
   <head>
-    <link  href="bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="timeline.css" rel="stylesheet" type="text/css" />
 
     <script src="bower_components/react/react.js"></script>
     <script src="bower_components/react/JSXTransformer.js"></script>
@@ -18,18 +19,20 @@
 
       var Icon = React.createClass({
         render: function () {
+          var src = this.props.src;
           return (
-            <img class="icon {this.props.type}" src={this.props.src} />
+            <img className="icon {this.props.type}" src={src} />
           );
         }
       });
 
       var Decoration = React.createClass({
         render: function () {
+          var type = (this.props.what === "add-user" ? "user" : "insight"),
+            src = this.props.image;
           return (
-            <ul class="decoration">
-              <li><Icon type="user" src="http://bit.ly/1HOCCui" /></li>
-              <li><Icon type="user" src="http://bit.ly/1AsUibq" /></li>
+            <ul className="decoration list-inline">
+              <li><Icon type={type} src={src} /></li>
             </ul>
           );
         }
@@ -37,20 +40,27 @@
 
       var Summary = React.createClass({
         render: function () {
+          var what = this.props.what, details = this.props.details,
+            summary = {
+              "added-insight": "Added new insight",
+              "said": details.comment,
+              "added-user": "Added user",
+              "renamed-board": "Renamed board"
+            }[what];
           return (
-            <div class="summary">added 2 users to this board</div>
+            <div className="summary">{summary}</div>
           );
         }
       });
 
       var Provenance = React.createClass({
         render: function () {
-          var who = this.props.who, when = moment(this.props.when).fromNow();
+          var name = this.props.who.name, when = this.props.when;
 
           return (
-            <div class="provenance">
-              <span class="who">{who}</span> &bull;&nbsp;
-              <span class="when">{when}</span>
+            <div className="provenance">
+              <span className="who">{name}</span> &bull;&nbsp;
+              <span className="when">{when}</span>
             </div>
           );
         }
@@ -58,11 +68,18 @@
 
       var Point = React.createClass({
         render: function () {
+          var who = this.props.point.who,
+            when = moment(this.props.point.when).fromNow(),
+            what = this.props.point.what,
+            details = this.props.point.details,
+            image = details.thumbnail;
           return (
-            <div class="point">
-              <Provenance who="you" when="1990-01-01 10:22 PM" />
-              <Summary />
-              <Decoration />
+            <div className="point row">
+              <div className="col-sm-6">
+                <Provenance who={who} when={when} />
+                <Summary what={what} details={details} />
+              </div>
+              <Decoration what={what} image={image} className="col-sm-6" />
             </div>
           );
         }
@@ -71,7 +88,7 @@
       var ChatInput = React.createClass({
         render: function () {
           return (
-            <div class="chat">
+            <div className="chat">
               <Icon type="user" src="http://bit.ly/1HOCCui" />
               <input type="text" placeholder="add a comment..."></input>
             </div>
@@ -81,22 +98,64 @@
 
       var Timeline = React.createClass({
         render: function () {
+          var points = this.props.points.map(function(p) {
+            return <Point point={p} />
+          });
           return (
-            <div class="timline">
-              <Point />
-              <Point />
+            <div className="timeline">
+              {points}
               <ChatInput />
+                <div className="row">
+              </div>
             </div>
           );
         }
       });
 
-      React.renderComponent(<Timeline />, document.getElementById('container'));
+      var events = [
+        {
+          board: 1,
+          who: { name: "you", thumbnail: "http://bit.ly/1xTjGJx" },
+          when: "1990-01-01 10:01 AM",
+          what: "said",
+          details: { comment: "ipsos changed my life" }
+        },
+        {
+          board: 1,
+          who: { name: "adamb", thumbnail: "http://bit.ly/1xTjGJx" },
+          when: "2014-01-01 10:01 AM",
+          what: "added-insight",
+          details: { insight_id: 12, thumbnail: "http://bit.ly/14wn0xv" }
+        },
+        {
+          board: 1,
+          who: { name: "adamb", thumbnail: "http://bit.ly/1xTjGJx" },
+          when: "2014-01-01 10:11 AM",
+          what: "added-insight",
+          details: { insight_id: 13, thumbnail: "http://bit.ly/1xGjnzZ" }
+        },
+        {
+          board: 1,
+          who: { name: "joe", thumbnail: "http://bit.ly/1xTjGJx" },
+          when: "2014-01-02 10:01 AM",
+          what: "added-user",
+          details: { user_id: 2, thumbnail: "http://bit.ly/1AsUibq" }
+        },
+        {
+          board: 1,
+          who: { name: "ryan", thumbnail: "http://bit.ly/1xTjGJx" },
+          when: "2014-02-01 10:01 AM",
+          what: "renamed-board",
+          details: { title: "screw this board" }
+        },
+      ];
+
+      React.render(<Timeline points={events} />, document.getElementById('container'));
     </script>
 
   </head>
 
   <body>
-    <div id="container"></div>
+    <div id="container" class="col-sm-3"></div>
   </body>
 </html>
