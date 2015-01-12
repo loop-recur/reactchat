@@ -74,26 +74,26 @@
 
       // This is a set-up for chat items
 
-      var Point = React.createClass({
-        render: function () {
-          var who = this.props.point.who,
-            when = moment(this.props.point.when).fromNow(),
-            what = this.props.point.what,
-            details = this.props.point.details,
-            image = details.thumbnail || who.thumbnail;
-          return (
-            <div className="point">
-              <div className="timeline_item chat_item">
-              <div className="col-sm-10">
-                <Provenance who={who} when={when} />
-                <Summary what={what} details={details} />
-              </div>
-              <Decoration what={what} image={image} details={details} className="col-sm-2" />
-            </div>
-            </div>
-          );
-        }
-      });
+      // var Point = React.createClass({
+      //   render: function () {
+      //     var who = this.props.point.who,
+      //       when = moment(this.props.point.when).fromNow(),
+      //       what = this.props.point.what,
+      //       details = this.props.point.details,
+      //       image = details.thumbnail || who.thumbnail;
+      //     return (
+      //       <div className="point">
+      //         <div className="timeline_item chat_item">
+      //         <div className="col-sm-10">
+      //           <Provenance who={who} when={when} />
+      //           <Summary what={what} details={details} />
+      //         </div>
+      //         <Decoration what={what} image={image} details={details} className="col-sm-2" />
+      //       </div>
+      //       </div>
+      //     );
+      //   }
+      // });
 
       // This is a set-up for activity items
 
