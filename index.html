@@ -9,8 +9,6 @@
     <script src="bower_components/ramda/ramda.js"></script>
     <script src="bower_components/moment/moment.js"></script>
 
-    <script type="text/jsx" src="chat.js"></script>
-
     <script type="text/jsx">
       // Timeline
       //   Point
@@ -39,7 +37,7 @@
           var inside = (what === "renamed-board") ? boardName : <Icon type={type} src={src} />;
 
           return (
-            <ul className="decoration list-inline">
+            <ul className="decoration">
               <li>{inside}</li>
             </ul>
           );
@@ -74,6 +72,8 @@
         }
       });
 
+      // This is a set-up for chat items
+
       var Point = React.createClass({
         render: function () {
           var who = this.props.point.who,
@@ -82,23 +82,57 @@
             details = this.props.point.details,
             image = details.thumbnail || who.thumbnail;
           return (
-            <div className="point row">
-              <div className="col-sm-6">
+            <div className="point">
+              <div className="timeline_item chat_item">
+              <div className="col-sm-10">
                 <Provenance who={who} when={when} />
                 <Summary what={what} details={details} />
               </div>
-              <Decoration what={what} image={image} details={details} className="col-sm-6" />
+              <Decoration what={what} image={image} details={details} className="col-sm-2" />
+            </div>
             </div>
           );
         }
       });
 
+      // This is a set-up for activity items
+
+      var Point = React.createClass({
+        render: function () {
+          var who = this.props.point.who,
+            when = moment(this.props.point.when).fromNow(),
+            what = this.props.point.what,
+            details = this.props.point.details,
+            image = details.thumbnail || who.thumbnail;
+          return (
+            <div className="point">
+              <div className="timeline_item timeline_activity">
+              <div className="col-sm-6">
+                <Provenance who={who} when={when} />
+                <Summary what={what} details={details} />
+              </div>
+              <div className="col-sm-6">
+                <div className="tooltip-arrow"></div>
+                <Decoration what={what} image={image} details={details}/>
+              </div>
+            </div>
+            </div>
+          );
+        }
+      });
+
+
+
       var ChatInput = React.createClass({
         render: function () {
           return (
-            <div className="chat">
-              <Icon type="user" src="http://bit.ly/1HOCCui" />
-              <input type="text" placeholder="add a comment..."></input>
+            <div className="chat_field form-group">
+              <div className="col-sm-2">
+                <Icon type="user" src="http://bit.ly/1HOCCui" />
+              </div>
+              <div className="col-sm-10">
+                <input className="form-control" type="text" placeholder="add a comment..."></input>
+              </div>
             </div>
           );
         }
@@ -173,7 +207,7 @@
 
       function render (events) {
         console.log(events.length);
-        React.render(<Timeline points={events} />, document.getElementById('container'));
+        React.render(<Timeline points={events} />, document.getElementById('timeline_container'));
       }
 
       render(events);
@@ -182,6 +216,17 @@
   </head>
 
   <body>
-    <div id="container" class="col-sm-3"></div>
+    <div class="wrapper live_board">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-sm-9">
+            <div class="dotted_border"></div>
+          </div>
+          <div class="col-sm-3">
+            <div id="timeline_container" class="dotted_border timeline_container"></div>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

@@ -1,0 +1,182 @@
+.live_board {
+  width: 100%;
+  height: 100%;
+  padding: 5% 0;
+
+  font-family: 'Proxima Nova', 'Helvetica Neue', Helvetica, sans-serif;
+  font-weight: 100;
+  color: #fff;
+
+  background-color: #262626;
+  text-shadow: 0 1px 0 #000;
+}
+
+ul.timeline,
+ul.decoration {
+  list-style-type: none;
+}
+
+.dotted_border {
+  position: relative;
+
+  width: 100%;
+  height: 100%;
+
+  border: 2px dashed rgb(125, 125, 125);
+  border-radius: 10px;
+}
+
+
+.timeline_container {
+  &:before {
+    content: '';
+    position: absolute;
+    z-index: 1;
+
+    width: 4px;
+    height: 98%;
+    margin-left: 50%;
+
+    background-color: #000;
+    box-shadow: 1px 0 0 0 rgba(255,255,255,.15);
+  }
+}
+
+
+.shadow-square-right {
+  position: absolute;
+  top: 2px;
+  right: -4px;
+
+  width: 4px;
+  height: 100%;
+
+  background-color: #000; 
+
+  -webkit-transform:skewY(35deg);
+  -webkit-transform-origin:top;
+  
+  -moz-transform:skewY(35deg);
+  -moz-transform-origin:top;
+  
+  -ms-transform:skewY(35deg);
+  -ms-transform-origin:top;
+  
+  -o-transform:skewY(35deg);
+  -o-transform-origin:top;  
+  
+  transform: skewY(35deg);
+  transform-origin: top;  
+}
+
+.shadow-square-left {
+  position:absolute;
+  left:0;
+  bottom:-3px;
+
+  width: 100%;
+  height:3px;
+
+  background-color: #000;
+  
+  -webkit-transform:skew(55deg);
+  -webkit-transform-origin:top;
+  
+  -moz-transform:skew(55deg);
+  -moz-transform-origin:top;
+  
+  -ms-transform:skew(55deg);
+  -ms-transform-origin:top;
+  
+  -o-transform:skew(55deg);
+  -o-transform-origin:top;
+  
+  transform:skew(55deg);
+  transform-origin:top;  
+}
+
+.timeline_item {
+  position: relative;
+  z-index: 99;
+
+  min-height: 70px;
+  margin-bottom: 10px;
+}
+
+.chat_item {
+  padding: 10px 1%;
+  margin: 10px 2%;
+
+  text-align: right;
+
+  background: #3b4850;
+  
+  &:before {
+    content: '';
+    .shadow-square-left;
+  }
+  
+  &:after {
+    content: '';
+    .shadow-square-right;
+  }
+}
+
+.timeline_activity {
+  text-align: right;
+  
+  .decoration {
+    position: relative;
+
+    padding: 10px 5px;
+    margin-left: 0;
+
+    text-align: center;
+
+    background-color: #1e1e1e;
+    
+    &:before {
+      content: '';
+      .shadow-square-left;
+    }
+
+    &:after {
+      content: '';
+      .shadow-square-right;
+    }
+  }
+}
+
+.tooltip-arrow {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+
+  width: 0;
+  height: 0;
+  margin-top: -5px;
+
+  border-width: 5px 5px 5px 0;
+  border-style: solid;
+  border-right-color: #1e1e1e;
+}
+
+.provenance {
+  margin-top: 1em;
+
+  font-size: 10px;
+}
+
+.chat_field {
+  position: absolute;
+  z-index: 99;
+  bottom: 0;
+
+  width: 100%;
+  input {
+    color: #fff;
+
+    border-color: rgba(0,0,0,.5);
+    background: #3c3c3c;
+  }
+}
